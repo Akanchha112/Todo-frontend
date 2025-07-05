@@ -1,64 +1,106 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function TaskPage() {
   const [tasks, setTasks] = useState([]);
+  const [token, setToken] = useState(null);
   const [newTask, setNewTask] = useState('');
   const [editTask, setEditTask] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
 
-  const BACKEND_URL = '';
+  const BACKEND_URL = 'http://localhost:3001/tasks';
 
-  const fetchTasks = async () => {
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    console.log('login token:', storedToken);
+
+    if (!storedToken) {
+      alert('User not authenticated');
+      router.push('/login');
+    } else {
+      setToken(storedToken);
+      fetchTasks(storedToken);
+    }
+  }, []);
+
+  const fetchTasks = async (userToken) => {
     try {
-      const res = await fetch(BACKEND_URL);
+      const res = await fetch(BACKEND_URL, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
       const data = await res.json();
       setTasks(data);
+      console.log('tasks data -', data);
     } catch (err) {
-      alert('Failed to fetch task');
+      alert('Failed to fetch tasks');
     }
   };
 
   const addTask = async () => {
-    if (!newTask.trim()) return;
+    if (!newTask.trim() || !token) return;
+
     try {
       await fetch(BACKEND_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ title: newTask }),
       });
+
       setNewTask('');
-      fetchTasks();
+      fetchTasks(token);
     } catch {
-      alert('Failed to add todo');
+      alert('Failed to add task');
     }
   };
 
   const deleteTask = async (id) => {
+    if (!token) return;
+
     try {
-      await fetch(`${BACKEND_URL}/${id}`, { method: 'DELETE' });
-      fetchTasks();
+      await fetch(`${BACKEND_URL}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      fetchTasks(token);
     } catch {
-      alert('Failed to delete');
+      alert('Failed to delete task');
     }
   };
 
   const updateTask = async () => {
-    if (!editTask.trim() || editingId === null) return;
+    if (!editTask.trim() || editingId === null || !token) return;
+
     try {
       await fetch(`${BACKEND_URL}/${editingId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ title: editTask }),
       });
+
       setEditTask('');
       setEditingId(null);
       setIsModalOpen(false);
-      fetchTasks();
+      fetchTasks(token);
     } catch {
-      alert('Failed to update');
+      alert('Failed to update task');
     }
   };
 
@@ -67,10 +109,6 @@ export default function TaskPage() {
     setEditingId(task.id);
     setIsModalOpen(true);
   };
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
 
   return (
     <main className="max-w-xl mx-auto p-6">
