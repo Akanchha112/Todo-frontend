@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import { Navigation } from "./component/navigation";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,12 +19,23 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className="bg-gray-50 text-gray-900">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        {children}
+        <header className=" shadow-md p-4 sticky z-50 text-center">
+          <Navigation />
+        </header>
+
+        <main className="flex-1 container mx-auto px-4 py-6">
+          {children}
+        </main>
+
+        <footer className="bg-black border-t text-center py-4 text-sm text-gray-500">
+          © {new Date().getFullYear()} Your Company. All rights reserved.
+        </footer>
       </body>
     </html>
   );
 }
+
