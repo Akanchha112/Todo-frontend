@@ -16,6 +16,11 @@ export default function Register() {
     });
     const data = await res.json();
     console.log("register data: ",data);
+
+    if(data.error) {
+      alert(data.message || 'Registration failed'); 
+      return;
+    }
     if (data.message=='User registered') {
       alert("User Registerd. Login to view Tasks page")
       // localStorage.setItem('token', data.access_token);
