@@ -21,6 +21,8 @@ export default function Login() {
     if (data.access_token) {
       localStorage.setItem('token', data.access_token);
       router.push('/tasks');
+    }else{
+      alert(data.message || 'Wrong email or password');
     }
   };
 
