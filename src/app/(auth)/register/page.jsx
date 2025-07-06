@@ -9,6 +9,8 @@ export default function Register() {
   const [form, setForm] = useState({name:'', email: '', password: '' });
 
   const handleSubmit = async () => {
+    console.log('Submitting:', form);
+
     const res = await fetch('http://localhost:3001/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
