@@ -124,7 +124,7 @@ export default function TaskPage() {
         />
         <button
           onClick={addTask}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 cursor-pointer transition-all"
         >
           Add
         </button>
@@ -140,13 +140,13 @@ export default function TaskPage() {
             <div className="flex gap-2">
               <button
                 onClick={() => openEdit(task)}
-                className="text-sm text-yellow-600 hover:underline"
+                className="text-sm text-yellow-600 hover:underline cursor-pointer"
               >
                 Edit
               </button>
               <button
                 onClick={() => deleteTask(task.id)}
-                className="text-sm text-red-600 hover:underline"
+                className="text-sm text-red-600 hover:underline cursor-pointer"
               >
                 Delete
               </button>
@@ -170,13 +170,13 @@ export default function TaskPage() {
                   setIsModalOpen(false);
                   setEditingId(null);
                 }}
-                className="px-4 py-2 border rounded-md"
+                className="px-4 py-2 border rounded-md cursor-pointer hover:bg-gray-200 transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={updateTask}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer transition-all"
               >
                 Update
               </button>
