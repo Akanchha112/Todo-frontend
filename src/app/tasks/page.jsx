@@ -87,7 +87,7 @@ export default function TaskPage() {
 
     try {
       await fetch(`${BACKEND_URL}/${editingId}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
